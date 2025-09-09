@@ -55,7 +55,7 @@ void printResults(const std::string& testName, int capacity,
 void testHotDataAccess() {
     std::cout << "\n=== 测试场景1：热点数据访问测试 ===" << std::endl;
     
-    const int CAPACITY = 20;         // 缓存容量
+    const int CAPACITY = 60;         // 缓存容量
     const int OPERATIONS = 500000;   // 总操作次数
     const int HOT_KEYS = 200;         // 热点数据数量
     const int COLD_KEYS = 50000;      // 冷数据数量
