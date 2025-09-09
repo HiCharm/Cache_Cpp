@@ -67,7 +67,7 @@ public:
         return false;
     }
     Value get(Key key) override{
-        Value value();
+        Value value{};
         get(key,value);
         return value;
     }
@@ -89,12 +89,12 @@ private:
     void initializeList(){
         dummyHead_ = make_shared<LruNodeType>(Key(),Value());
         dummyTail_ = make_shared<LruNodeType>(Key(),Value());
-        dummyHead_->next = dummyTail_;
-        dummyTail_->prev = dummyHead_;
+        dummyHead_->next_ = dummyTail_;
+        dummyTail_->prev_ = dummyHead_;
     }
     void updateExistingNode(NodePtr node, const Value& value){
         node->setValue(value);
-        moveTOMostRecent(node);
+        moveToMostRecent(node);
     }
     void addNewNode(const Key& key, const Value& value){
         if(nodeMap_.size() >= capacity_){
@@ -109,7 +109,7 @@ private:
         insertNode(node);
     }
     void removeNode(NodePtr node){
-        if(!node->prev_expired() && node->next_){
+        if(!node->prev_.expired() && node->next_){
             auto prev = node->prev_.lock();
             prev->next_ = node->next_;
             node->next_->prev_ = prev;
