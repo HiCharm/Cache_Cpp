@@ -6,6 +6,7 @@ template<typename Key, typename Value> class LRUcache;
 #include <iostream>
 #include <memory>
 #include <mutex>
+#include <unordered_map>
 
 using namespace std;
 template<typename Key, typename Value>
@@ -33,11 +34,11 @@ public:
 };
 
 template<typename Key, typename Value>
-class LRUcache : public CachePolic<Key, Value>{
+class LRUcache : public CachePolicy<Key, Value>{
 public:
     using LruNodeType = LRUnode<Key, Value>;
     using NodePtr = shared_ptr<LruNodeType>;
-    using NodeMap = unordered_map<Key,NodePrt>;
+    using NodeMap = unordered_map<Key,NodePtr>;
 
     LRUcache(int capacity):capacity_(capacity){
         initializeList();
@@ -100,7 +101,7 @@ private:
             evictLeastRecent();
         }
         NodePtr newNode = make_shared<LruNodeType>(key, value);
-        insertNode(newNOde);
+        insertNode(newNode);
         nodeMap_[key] = newNode;
     }
     void moveToMostRecent(NodePtr node){
@@ -112,7 +113,7 @@ private:
             auto prev = node->prev_.lock();
             prev->next_ = node->next_;
             node->next_->prev_ = prev;
-            node->next_ = nullprt;
+            node->next_ = nullptr;
         }
     }
     void insertNode(NodePtr node){
